@@ -1,0 +1,113 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    NUM
+
+Grammar
+
+Rule 0     S' -> namedevice_list
+Rule 1     namedevice_list -> ID
+Rule 2     namedevice_list -> ID VIRGULA namedevice_list
+Rule 3     device -> DISPOSITIVO DOISPONTOS LBRACE namedevice_list RBRACE
+Rule 4     devices -> device devices
+Rule 5     devices -> device
+Rule 6     atribuicao -> SET ID OPLOGIC ID
+Rule 7     condicional -> SE ID OPLOGIC ID ENTAO cmds
+Rule 8     condicional -> SE ID OPLOGIC ID ENTAO cmds SENAO cmds
+Rule 9     acao -> LIGAR ID
+Rule 10    acao -> DESLIGAR ID
+Rule 11    obsact -> ENVIAR ALERTA LPAR ID RPAR ID
+Rule 12    obsact -> ENVIAR ALERTA LPAR ID RPAR PARA TODOS DOISPONTOS namedevice_list
+Rule 13    cmds -> atribuicao cmds
+Rule 14    cmds -> condicional cmds
+Rule 15    cmds -> obsact cmds
+Rule 16    cmds -> acao cmds
+Rule 17    cmds -> atribuicao
+Rule 18    cmds -> condicional
+Rule 19    cmds -> obsact
+Rule 20    cmds -> acao
+Rule 21    programa -> devices cmds PONTO
+
+Terminals, with rules where they appear
+
+ALERTA               : 11 12
+AND                  : 
+DESLIGAR             : 10
+DISPOSITIVO          : 3
+DOISPONTOS           : 3 12
+ENTAO                : 7 8
+ENVIAR               : 11 12
+ID                   : 1 2 6 6 7 7 8 8 9 10 11 11 12
+LBRACE               : 3
+LIGAR                : 9
+LPAR                 : 11 12
+NUM                  : 
+OPLOGIC              : 6 7 8
+PARA                 : 12
+PONTO                : 21
+RBRACE               : 3
+RPAR                 : 11 12
+SE                   : 7 8
+SENAO                : 8
+SET                  : 6
+TODOS                : 12
+VIRGULA              : 2
+error                : 
+
+Nonterminals, with rules where they appear
+
+acao                 : 16 20
+atribuicao           : 13 17
+cmds                 : 7 8 8 13 14 15 16 21
+condicional          : 14 18
+device               : 4 5
+devices              : 4 21
+namedevice_list      : 2 3 12 0
+obsact               : 15 19
+programa             : 
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . namedevice_list
+    (1) namedevice_list -> . ID
+    (2) namedevice_list -> . ID VIRGULA namedevice_list
+
+    ID              shift and go to state 2
+
+    namedevice_list                shift and go to state 1
+
+state 1
+
+    (0) S' -> namedevice_list .
+
+
+
+state 2
+
+    (1) namedevice_list -> ID .
+    (2) namedevice_list -> ID . VIRGULA namedevice_list
+
+    $end            reduce using rule 1 (namedevice_list -> ID .)
+    VIRGULA         shift and go to state 3
+
+
+state 3
+
+    (2) namedevice_list -> ID VIRGULA . namedevice_list
+    (1) namedevice_list -> . ID
+    (2) namedevice_list -> . ID VIRGULA namedevice_list
+
+    ID              shift and go to state 2
+
+    namedevice_list                shift and go to state 4
+
+state 4
+
+    (2) namedevice_list -> ID VIRGULA namedevice_list .
+
+    $end            reduce using rule 2 (namedevice_list -> ID VIRGULA namedevice_list .)
+
