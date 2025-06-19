@@ -1,113 +1,672 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    AND
-    NUM
-
 Grammar
 
-Rule 0     S' -> namedevice_list
-Rule 1     namedevice_list -> ID
-Rule 2     namedevice_list -> ID VIRGULA namedevice_list
-Rule 3     device -> DISPOSITIVO DOISPONTOS LBRACE namedevice_list RBRACE
-Rule 4     devices -> device devices
-Rule 5     devices -> device
-Rule 6     atribuicao -> SET ID OPLOGIC ID
-Rule 7     condicional -> SE ID OPLOGIC ID ENTAO cmds
-Rule 8     condicional -> SE ID OPLOGIC ID ENTAO cmds SENAO cmds
-Rule 9     acao -> LIGAR ID
-Rule 10    acao -> DESLIGAR ID
-Rule 11    obsact -> ENVIAR ALERTA LPAR ID RPAR ID
-Rule 12    obsact -> ENVIAR ALERTA LPAR ID RPAR PARA TODOS DOISPONTOS namedevice_list
-Rule 13    cmds -> atribuicao cmds
-Rule 14    cmds -> condicional cmds
-Rule 15    cmds -> obsact cmds
-Rule 16    cmds -> acao cmds
-Rule 17    cmds -> atribuicao
-Rule 18    cmds -> condicional
-Rule 19    cmds -> obsact
-Rule 20    cmds -> acao
-Rule 21    programa -> devices cmds PONTO
+Rule 0     S' -> program
+Rule 1     program -> devices cmds
+Rule 2     devices -> device devices
+Rule 3     devices -> device
+Rule 4     device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE
+Rule 5     device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE
+Rule 6     cmds -> command cmds
+Rule 7     cmds -> command
+Rule 8     command -> cmd PONTO
+Rule 9     cmd -> attrib
+Rule 10    cmd -> obsact
+Rule 11    cmd -> act
+Rule 12    attrib -> SET ID EQUALS var
+Rule 13    var -> NUM
+Rule 14    var -> BOOL
+Rule 15    obsact -> SE obs ENTAO act
+Rule 16    obsact -> SE obs ENTAO act SENAO act
+Rule 17    obs -> obs_base
+Rule 18    obs -> obs_base AND obs
+Rule 19    obs_base -> ID OPLOGIC var
+Rule 20    act -> action ID
+Rule 21    act -> ENVIAR ALERTA LPAR STRING RPAR ID
+Rule 22    act -> ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID
+Rule 23    act -> ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list
+Rule 24    action -> LIGAR
+Rule 25    action -> DESLIGAR
+Rule 26    id_list -> ID VIRGULA id_list
+Rule 27    id_list -> ID
 
 Terminals, with rules where they appear
 
-ALERTA               : 11 12
-AND                  : 
-DESLIGAR             : 10
-DISPOSITIVO          : 3
-DOISPONTOS           : 3 12
-ENTAO                : 7 8
-ENVIAR               : 11 12
-ID                   : 1 2 6 6 7 7 8 8 9 10 11 11 12
-LBRACE               : 3
-LIGAR                : 9
-LPAR                 : 11 12
-NUM                  : 
-OPLOGIC              : 6 7 8
-PARA                 : 12
-PONTO                : 21
-RBRACE               : 3
-RPAR                 : 11 12
-SE                   : 7 8
-SENAO                : 8
-SET                  : 6
-TODOS                : 12
-VIRGULA              : 2
+ALERTA               : 21 22 23
+AND                  : 18
+BOOL                 : 14
+DESLIGAR             : 25
+DISPOSITIVO          : 4 5
+DOISPONTOS           : 4 5 23
+ENTAO                : 15 16
+ENVIAR               : 21 22 23
+EQUALS               : 12
+ID                   : 4 5 5 12 19 20 21 22 22 26 27
+LBRACE               : 4 5
+LIGAR                : 24
+LPAR                 : 21 22 23
+NUM                  : 13
+OPLOGIC              : 19
+PARA                 : 23
+PONTO                : 8
+RBRACE               : 4 5
+RPAR                 : 21 22 23
+SE                   : 15 16
+SENAO                : 16
+SET                  : 12
+STRING               : 21 22 23
+TODOS                : 23
+VIRGULA              : 5 22 26
 error                : 
 
 Nonterminals, with rules where they appear
 
-acao                 : 16 20
-atribuicao           : 13 17
-cmds                 : 7 8 8 13 14 15 16 21
-condicional          : 14 18
-device               : 4 5
-devices              : 4 21
-namedevice_list      : 2 3 12 0
-obsact               : 15 19
-programa             : 
+act                  : 11 15 16 16
+action               : 20
+attrib               : 9
+cmd                  : 8
+cmds                 : 1 6
+command              : 6 7
+device               : 2 3
+devices              : 1 2
+id_list              : 23 26
+obs                  : 15 16 18
+obs_base             : 17 18
+obsact               : 10
+program              : 0
+var                  : 12 19
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . namedevice_list
-    (1) namedevice_list -> . ID
-    (2) namedevice_list -> . ID VIRGULA namedevice_list
+    (0) S' -> . program
+    (1) program -> . devices cmds
+    (2) devices -> . device devices
+    (3) devices -> . device
+    (4) device -> . DISPOSITIVO DOISPONTOS LBRACE ID RBRACE
+    (5) device -> . DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE
 
-    ID              shift and go to state 2
+    DISPOSITIVO     shift and go to state 4
 
-    namedevice_list                shift and go to state 1
+    program                        shift and go to state 1
+    devices                        shift and go to state 2
+    device                         shift and go to state 3
 
 state 1
 
-    (0) S' -> namedevice_list .
+    (0) S' -> program .
 
 
 
 state 2
 
-    (1) namedevice_list -> ID .
-    (2) namedevice_list -> ID . VIRGULA namedevice_list
+    (1) program -> devices . cmds
+    (6) cmds -> . command cmds
+    (7) cmds -> . command
+    (8) command -> . cmd PONTO
+    (9) cmd -> . attrib
+    (10) cmd -> . obsact
+    (11) cmd -> . act
+    (12) attrib -> . SET ID EQUALS var
+    (15) obsact -> . SE obs ENTAO act
+    (16) obsact -> . SE obs ENTAO act SENAO act
+    (20) act -> . action ID
+    (21) act -> . ENVIAR ALERTA LPAR STRING RPAR ID
+    (22) act -> . ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID
+    (23) act -> . ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list
+    (24) action -> . LIGAR
+    (25) action -> . DESLIGAR
 
-    $end            reduce using rule 1 (namedevice_list -> ID .)
-    VIRGULA         shift and go to state 3
+    SET             shift and go to state 11
+    SE              shift and go to state 12
+    ENVIAR          shift and go to state 14
+    LIGAR           shift and go to state 15
+    DESLIGAR        shift and go to state 16
 
+    cmds                           shift and go to state 5
+    command                        shift and go to state 6
+    cmd                            shift and go to state 7
+    attrib                         shift and go to state 8
+    obsact                         shift and go to state 9
+    act                            shift and go to state 10
+    action                         shift and go to state 13
 
 state 3
 
-    (2) namedevice_list -> ID VIRGULA . namedevice_list
-    (1) namedevice_list -> . ID
-    (2) namedevice_list -> . ID VIRGULA namedevice_list
+    (2) devices -> device . devices
+    (3) devices -> device .
+    (2) devices -> . device devices
+    (3) devices -> . device
+    (4) device -> . DISPOSITIVO DOISPONTOS LBRACE ID RBRACE
+    (5) device -> . DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE
 
-    ID              shift and go to state 2
+    SET             reduce using rule 3 (devices -> device .)
+    SE              reduce using rule 3 (devices -> device .)
+    ENVIAR          reduce using rule 3 (devices -> device .)
+    LIGAR           reduce using rule 3 (devices -> device .)
+    DESLIGAR        reduce using rule 3 (devices -> device .)
+    DISPOSITIVO     shift and go to state 4
 
-    namedevice_list                shift and go to state 4
+    device                         shift and go to state 3
+    devices                        shift and go to state 17
 
 state 4
 
-    (2) namedevice_list -> ID VIRGULA namedevice_list .
+    (4) device -> DISPOSITIVO . DOISPONTOS LBRACE ID RBRACE
+    (5) device -> DISPOSITIVO . DOISPONTOS LBRACE ID VIRGULA ID RBRACE
 
-    $end            reduce using rule 2 (namedevice_list -> ID VIRGULA namedevice_list .)
+    DOISPONTOS      shift and go to state 18
+
+
+state 5
+
+    (1) program -> devices cmds .
+
+    $end            reduce using rule 1 (program -> devices cmds .)
+
+
+state 6
+
+    (6) cmds -> command . cmds
+    (7) cmds -> command .
+    (6) cmds -> . command cmds
+    (7) cmds -> . command
+    (8) command -> . cmd PONTO
+    (9) cmd -> . attrib
+    (10) cmd -> . obsact
+    (11) cmd -> . act
+    (12) attrib -> . SET ID EQUALS var
+    (15) obsact -> . SE obs ENTAO act
+    (16) obsact -> . SE obs ENTAO act SENAO act
+    (20) act -> . action ID
+    (21) act -> . ENVIAR ALERTA LPAR STRING RPAR ID
+    (22) act -> . ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID
+    (23) act -> . ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list
+    (24) action -> . LIGAR
+    (25) action -> . DESLIGAR
+
+    $end            reduce using rule 7 (cmds -> command .)
+    SET             shift and go to state 11
+    SE              shift and go to state 12
+    ENVIAR          shift and go to state 14
+    LIGAR           shift and go to state 15
+    DESLIGAR        shift and go to state 16
+
+    command                        shift and go to state 6
+    cmds                           shift and go to state 19
+    cmd                            shift and go to state 7
+    attrib                         shift and go to state 8
+    obsact                         shift and go to state 9
+    act                            shift and go to state 10
+    action                         shift and go to state 13
+
+state 7
+
+    (8) command -> cmd . PONTO
+
+    PONTO           shift and go to state 20
+
+
+state 8
+
+    (9) cmd -> attrib .
+
+    PONTO           reduce using rule 9 (cmd -> attrib .)
+
+
+state 9
+
+    (10) cmd -> obsact .
+
+    PONTO           reduce using rule 10 (cmd -> obsact .)
+
+
+state 10
+
+    (11) cmd -> act .
+
+    PONTO           reduce using rule 11 (cmd -> act .)
+
+
+state 11
+
+    (12) attrib -> SET . ID EQUALS var
+
+    ID              shift and go to state 21
+
+
+state 12
+
+    (15) obsact -> SE . obs ENTAO act
+    (16) obsact -> SE . obs ENTAO act SENAO act
+    (17) obs -> . obs_base
+    (18) obs -> . obs_base AND obs
+    (19) obs_base -> . ID OPLOGIC var
+
+    ID              shift and go to state 24
+
+    obs                            shift and go to state 22
+    obs_base                       shift and go to state 23
+
+state 13
+
+    (20) act -> action . ID
+
+    ID              shift and go to state 25
+
+
+state 14
+
+    (21) act -> ENVIAR . ALERTA LPAR STRING RPAR ID
+    (22) act -> ENVIAR . ALERTA LPAR STRING VIRGULA ID RPAR ID
+    (23) act -> ENVIAR . ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list
+
+    ALERTA          shift and go to state 26
+
+
+state 15
+
+    (24) action -> LIGAR .
+
+    ID              reduce using rule 24 (action -> LIGAR .)
+
+
+state 16
+
+    (25) action -> DESLIGAR .
+
+    ID              reduce using rule 25 (action -> DESLIGAR .)
+
+
+state 17
+
+    (2) devices -> device devices .
+
+    SET             reduce using rule 2 (devices -> device devices .)
+    SE              reduce using rule 2 (devices -> device devices .)
+    ENVIAR          reduce using rule 2 (devices -> device devices .)
+    LIGAR           reduce using rule 2 (devices -> device devices .)
+    DESLIGAR        reduce using rule 2 (devices -> device devices .)
+
+
+state 18
+
+    (4) device -> DISPOSITIVO DOISPONTOS . LBRACE ID RBRACE
+    (5) device -> DISPOSITIVO DOISPONTOS . LBRACE ID VIRGULA ID RBRACE
+
+    LBRACE          shift and go to state 27
+
+
+state 19
+
+    (6) cmds -> command cmds .
+
+    $end            reduce using rule 6 (cmds -> command cmds .)
+
+
+state 20
+
+    (8) command -> cmd PONTO .
+
+    SET             reduce using rule 8 (command -> cmd PONTO .)
+    SE              reduce using rule 8 (command -> cmd PONTO .)
+    ENVIAR          reduce using rule 8 (command -> cmd PONTO .)
+    LIGAR           reduce using rule 8 (command -> cmd PONTO .)
+    DESLIGAR        reduce using rule 8 (command -> cmd PONTO .)
+    $end            reduce using rule 8 (command -> cmd PONTO .)
+
+
+state 21
+
+    (12) attrib -> SET ID . EQUALS var
+
+    EQUALS          shift and go to state 28
+
+
+state 22
+
+    (15) obsact -> SE obs . ENTAO act
+    (16) obsact -> SE obs . ENTAO act SENAO act
+
+    ENTAO           shift and go to state 29
+
+
+state 23
+
+    (17) obs -> obs_base .
+    (18) obs -> obs_base . AND obs
+
+    ENTAO           reduce using rule 17 (obs -> obs_base .)
+    AND             shift and go to state 30
+
+
+state 24
+
+    (19) obs_base -> ID . OPLOGIC var
+
+    OPLOGIC         shift and go to state 31
+
+
+state 25
+
+    (20) act -> action ID .
+
+    PONTO           reduce using rule 20 (act -> action ID .)
+    SENAO           reduce using rule 20 (act -> action ID .)
+
+
+state 26
+
+    (21) act -> ENVIAR ALERTA . LPAR STRING RPAR ID
+    (22) act -> ENVIAR ALERTA . LPAR STRING VIRGULA ID RPAR ID
+    (23) act -> ENVIAR ALERTA . LPAR STRING RPAR PARA TODOS DOISPONTOS id_list
+
+    LPAR            shift and go to state 32
+
+
+state 27
+
+    (4) device -> DISPOSITIVO DOISPONTOS LBRACE . ID RBRACE
+    (5) device -> DISPOSITIVO DOISPONTOS LBRACE . ID VIRGULA ID RBRACE
+
+    ID              shift and go to state 33
+
+
+state 28
+
+    (12) attrib -> SET ID EQUALS . var
+    (13) var -> . NUM
+    (14) var -> . BOOL
+
+    NUM             shift and go to state 35
+    BOOL            shift and go to state 36
+
+    var                            shift and go to state 34
+
+state 29
+
+    (15) obsact -> SE obs ENTAO . act
+    (16) obsact -> SE obs ENTAO . act SENAO act
+    (20) act -> . action ID
+    (21) act -> . ENVIAR ALERTA LPAR STRING RPAR ID
+    (22) act -> . ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID
+    (23) act -> . ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list
+    (24) action -> . LIGAR
+    (25) action -> . DESLIGAR
+
+    ENVIAR          shift and go to state 14
+    LIGAR           shift and go to state 15
+    DESLIGAR        shift and go to state 16
+
+    act                            shift and go to state 37
+    action                         shift and go to state 13
+
+state 30
+
+    (18) obs -> obs_base AND . obs
+    (17) obs -> . obs_base
+    (18) obs -> . obs_base AND obs
+    (19) obs_base -> . ID OPLOGIC var
+
+    ID              shift and go to state 24
+
+    obs_base                       shift and go to state 23
+    obs                            shift and go to state 38
+
+state 31
+
+    (19) obs_base -> ID OPLOGIC . var
+    (13) var -> . NUM
+    (14) var -> . BOOL
+
+    NUM             shift and go to state 35
+    BOOL            shift and go to state 36
+
+    var                            shift and go to state 39
+
+state 32
+
+    (21) act -> ENVIAR ALERTA LPAR . STRING RPAR ID
+    (22) act -> ENVIAR ALERTA LPAR . STRING VIRGULA ID RPAR ID
+    (23) act -> ENVIAR ALERTA LPAR . STRING RPAR PARA TODOS DOISPONTOS id_list
+
+    STRING          shift and go to state 40
+
+
+state 33
+
+    (4) device -> DISPOSITIVO DOISPONTOS LBRACE ID . RBRACE
+    (5) device -> DISPOSITIVO DOISPONTOS LBRACE ID . VIRGULA ID RBRACE
+
+    RBRACE          shift and go to state 41
+    VIRGULA         shift and go to state 42
+
+
+state 34
+
+    (12) attrib -> SET ID EQUALS var .
+
+    PONTO           reduce using rule 12 (attrib -> SET ID EQUALS var .)
+
+
+state 35
+
+    (13) var -> NUM .
+
+    PONTO           reduce using rule 13 (var -> NUM .)
+    AND             reduce using rule 13 (var -> NUM .)
+    ENTAO           reduce using rule 13 (var -> NUM .)
+
+
+state 36
+
+    (14) var -> BOOL .
+
+    PONTO           reduce using rule 14 (var -> BOOL .)
+    AND             reduce using rule 14 (var -> BOOL .)
+    ENTAO           reduce using rule 14 (var -> BOOL .)
+
+
+state 37
+
+    (15) obsact -> SE obs ENTAO act .
+    (16) obsact -> SE obs ENTAO act . SENAO act
+
+    PONTO           reduce using rule 15 (obsact -> SE obs ENTAO act .)
+    SENAO           shift and go to state 43
+
+
+state 38
+
+    (18) obs -> obs_base AND obs .
+
+    ENTAO           reduce using rule 18 (obs -> obs_base AND obs .)
+
+
+state 39
+
+    (19) obs_base -> ID OPLOGIC var .
+
+    AND             reduce using rule 19 (obs_base -> ID OPLOGIC var .)
+    ENTAO           reduce using rule 19 (obs_base -> ID OPLOGIC var .)
+
+
+state 40
+
+    (21) act -> ENVIAR ALERTA LPAR STRING . RPAR ID
+    (22) act -> ENVIAR ALERTA LPAR STRING . VIRGULA ID RPAR ID
+    (23) act -> ENVIAR ALERTA LPAR STRING . RPAR PARA TODOS DOISPONTOS id_list
+
+    RPAR            shift and go to state 44
+    VIRGULA         shift and go to state 45
+
+
+state 41
+
+    (4) device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE .
+
+    DISPOSITIVO     reduce using rule 4 (device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE .)
+    SET             reduce using rule 4 (device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE .)
+    SE              reduce using rule 4 (device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE .)
+    ENVIAR          reduce using rule 4 (device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE .)
+    LIGAR           reduce using rule 4 (device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE .)
+    DESLIGAR        reduce using rule 4 (device -> DISPOSITIVO DOISPONTOS LBRACE ID RBRACE .)
+
+
+state 42
+
+    (5) device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA . ID RBRACE
+
+    ID              shift and go to state 46
+
+
+state 43
+
+    (16) obsact -> SE obs ENTAO act SENAO . act
+    (20) act -> . action ID
+    (21) act -> . ENVIAR ALERTA LPAR STRING RPAR ID
+    (22) act -> . ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID
+    (23) act -> . ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list
+    (24) action -> . LIGAR
+    (25) action -> . DESLIGAR
+
+    ENVIAR          shift and go to state 14
+    LIGAR           shift and go to state 15
+    DESLIGAR        shift and go to state 16
+
+    act                            shift and go to state 47
+    action                         shift and go to state 13
+
+state 44
+
+    (21) act -> ENVIAR ALERTA LPAR STRING RPAR . ID
+    (23) act -> ENVIAR ALERTA LPAR STRING RPAR . PARA TODOS DOISPONTOS id_list
+
+    ID              shift and go to state 48
+    PARA            shift and go to state 49
+
+
+state 45
+
+    (22) act -> ENVIAR ALERTA LPAR STRING VIRGULA . ID RPAR ID
+
+    ID              shift and go to state 50
+
+
+state 46
+
+    (5) device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID . RBRACE
+
+    RBRACE          shift and go to state 51
+
+
+state 47
+
+    (16) obsact -> SE obs ENTAO act SENAO act .
+
+    PONTO           reduce using rule 16 (obsact -> SE obs ENTAO act SENAO act .)
+
+
+state 48
+
+    (21) act -> ENVIAR ALERTA LPAR STRING RPAR ID .
+
+    PONTO           reduce using rule 21 (act -> ENVIAR ALERTA LPAR STRING RPAR ID .)
+    SENAO           reduce using rule 21 (act -> ENVIAR ALERTA LPAR STRING RPAR ID .)
+
+
+state 49
+
+    (23) act -> ENVIAR ALERTA LPAR STRING RPAR PARA . TODOS DOISPONTOS id_list
+
+    TODOS           shift and go to state 52
+
+
+state 50
+
+    (22) act -> ENVIAR ALERTA LPAR STRING VIRGULA ID . RPAR ID
+
+    RPAR            shift and go to state 53
+
+
+state 51
+
+    (5) device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE .
+
+    DISPOSITIVO     reduce using rule 5 (device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE .)
+    SET             reduce using rule 5 (device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE .)
+    SE              reduce using rule 5 (device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE .)
+    ENVIAR          reduce using rule 5 (device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE .)
+    LIGAR           reduce using rule 5 (device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE .)
+    DESLIGAR        reduce using rule 5 (device -> DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE .)
+
+
+state 52
+
+    (23) act -> ENVIAR ALERTA LPAR STRING RPAR PARA TODOS . DOISPONTOS id_list
+
+    DOISPONTOS      shift and go to state 54
+
+
+state 53
+
+    (22) act -> ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR . ID
+
+    ID              shift and go to state 55
+
+
+state 54
+
+    (23) act -> ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS . id_list
+    (26) id_list -> . ID VIRGULA id_list
+    (27) id_list -> . ID
+
+    ID              shift and go to state 57
+
+    id_list                        shift and go to state 56
+
+state 55
+
+    (22) act -> ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID .
+
+    PONTO           reduce using rule 22 (act -> ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID .)
+    SENAO           reduce using rule 22 (act -> ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID .)
+
+
+state 56
+
+    (23) act -> ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list .
+
+    PONTO           reduce using rule 23 (act -> ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list .)
+    SENAO           reduce using rule 23 (act -> ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list .)
+
+
+state 57
+
+    (26) id_list -> ID . VIRGULA id_list
+    (27) id_list -> ID .
+
+    VIRGULA         shift and go to state 58
+    PONTO           reduce using rule 27 (id_list -> ID .)
+    SENAO           reduce using rule 27 (id_list -> ID .)
+
+
+state 58
+
+    (26) id_list -> ID VIRGULA . id_list
+    (26) id_list -> . ID VIRGULA id_list
+    (27) id_list -> . ID
+
+    ID              shift and go to state 57
+
+    id_list                        shift and go to state 59
+
+state 59
+
+    (26) id_list -> ID VIRGULA id_list .
+
+    PONTO           reduce using rule 26 (id_list -> ID VIRGULA id_list .)
+    SENAO           reduce using rule 26 (id_list -> ID VIRGULA id_list .)
 
