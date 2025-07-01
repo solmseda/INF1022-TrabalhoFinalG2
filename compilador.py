@@ -158,13 +158,27 @@ def p_act_alert_msg(p):
     'act : ENVIAR ALERTA LPAR STRING RPAR ID'
     p[0] = ('alert_msg', p[6], p[4])
 
+def p_act_alert_msg_sem_paren(p):
+    'act : ENVIAR ALERTA STRING ID'
+    p[0] = ('alert_msg', p[4], p[3])
+
+
 def p_act_alert_msg_obs(p):
     'act : ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR ID'
     p[0] = ('alert_msg_obs', p[8], p[4], p[6])
 
+def p_act_alert_msg_obs_sem_paren(p):
+    'act : ENVIAR ALERTA STRING VIRGULA ID ID'
+    p[0] = ('alert_msg_obs', p[6], p[3], p[5])
+
+def p_act_alert_msg_obs_all(p):
+    '''act : ENVIAR ALERTA LPAR STRING VIRGULA ID RPAR PARA TODOS DOISPONTOS id_list'''
+    p[0] = ('broadcast_obs', p[3], p[5], p[9])
+
 def p_act_broadcast(p):
     'act : ENVIAR ALERTA LPAR STRING RPAR PARA TODOS DOISPONTOS id_list'
     p[0] = ('broadcast', p[4], p[9])
+
 
 def p_action(p):
     '''action : LIGAR
@@ -206,7 +220,7 @@ class CodeGenerator:
 
     def _generate_program(self, node):
         _, devices, commands = node
-        code = '''# Código gerado pelo compilador ObsAct → Python
+        code = '''# Codigo gerado pelo compilador ObsAct -> Python
 
 def ligar(namedevice):
     print(namedevice + " ligado!")
@@ -232,11 +246,11 @@ def alerta_obs(namedevice, msg, var):
 
         uninit = self.observation_vars - self.initialized_vars
         if uninit:
-            code += "\n# Inicialização automática\n"
+            code += "\n# Inicializacao automatica\n"
             for var in sorted(uninit):
                 code += f"{var} = 0\n"
 
-        code += "\n# Início do programa\n"
+        code += "\n# Inicio do programa\n"
         for cmd in commands:
             code += self.generate(cmd) + "\n"
 
@@ -294,6 +308,13 @@ def alerta_obs(namedevice, msg, var):
         code = f"{self._indent()}# Broadcast para todos\n"
         for dev in devices:
             code += f'{self._indent()}alerta("{dev}", {msg})\n'
+        return code.strip()
+
+    def _generate_broadcast_obs(self, node):
+        _, msg, var, devices = node
+        code = f"{self._indent()}# Broadcast para todos com variável\n"
+        for dev in devices:
+            code += f'{self._indent()}alerta_obs("{dev}", {msg}, {var})\n'
         return code.strip()
 
 
