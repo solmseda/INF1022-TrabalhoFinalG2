@@ -32,7 +32,7 @@ tokens = (
     'EQUALS',
     'OPLOGIC',
     'AND',
-    'BOOL'
+    'BOOL',
 ) + tuple(reservados.values())
 
 t_PONTO = r'\.'
@@ -97,11 +97,18 @@ def p_devices_single(p):
 
 def p_device(p):
     '''device : DISPOSITIVO DOISPONTOS LBRACE ID RBRACE
-              | DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE'''
-    if len(p) == 6:
+              | DISPOSITIVO DOISPONTOS LBRACE ID VIRGULA ID RBRACE
+              | DISPOSITIVO LBRACE ID RBRACE
+              | DISPOSITIVO LBRACE ID VIRGULA ID RBRACE'''
+    if len(p) == 6:          # dispositivo : { ID }
         p[0] = ('device', p[4], None)
-    else:
+    elif len(p) == 5:        # dispositivo { ID }
+        p[0] = ('device', p[3], None)
+    elif len(p) == 8:        # dispositivo : { ID , ID }
         p[0] = ('device', p[4], p[6])
+    elif len(p) == 7:        # dispositivo { ID , ID }
+        p[0] = ('device', p[3], p[5])
+
 
 def p_cmds_multiple(p):
     'cmds : command cmds'
@@ -111,9 +118,12 @@ def p_cmds_single(p):
     'cmds : command'
     p[0] = [p[1]]
 
+
 def p_command(p):
-    'command : cmd PONTO'
+    '''command : cmd
+               | cmd PONTO'''
     p[0] = p[1]
+
 
 def p_cmd(p):
     '''cmd : attrib
@@ -130,9 +140,21 @@ def p_var(p):
            | BOOL'''
     p[0] = p[1]
 
+def p_empty(p):
+    'empty :'
+    pass
+
+def p_maybe_act(p):
+    '''maybe_act : act
+                 | empty'''
+    if len(p) == 2:
+        p[0] = p[1] if p[1] is not None else ('noop',)
+
+
 def p_obsact_if(p):
-    'obsact : SE obs ENTAO act'
+    'obsact : SE obs ENTAO maybe_act'
     p[0] = ('if', p[2], p[4], None)
+
 
 def p_obsact_if_else(p):
     'obsact : SE obs ENTAO act SENAO act'
@@ -266,11 +288,26 @@ def alerta_obs(namedevice, msg, var):
         _, var, value = node
         return f"{self._indent()}{var} = {value}"
 
+    # def _generate_if(self, node):
+    #     _, cond, if_block, else_block = node
+    #     code = f"{self._indent()}if {self.generate(cond)}:\n"
+    #     self.indent_level += 1
+    #     code += self.generate(if_block) + "\n"
+    #     self.indent_level -= 1
+    #     if else_block:
+    #         code += f"{self._indent()}else:\n"
+    #         self.indent_level += 1
+    #         code += self.generate(else_block) + "\n"
+    #         self.indent_level -= 1
+    #     return code.strip()
     def _generate_if(self, node):
         _, cond, if_block, else_block = node
         code = f"{self._indent()}if {self.generate(cond)}:\n"
         self.indent_level += 1
-        code += self.generate(if_block) + "\n"
+        if if_block == ('noop',):
+            code += f"{self._indent()}pass\n"
+        else:
+            code += self.generate(if_block) + "\n"
         self.indent_level -= 1
         if else_block:
             code += f"{self._indent()}else:\n"
@@ -278,6 +315,7 @@ def alerta_obs(namedevice, msg, var):
             code += self.generate(else_block) + "\n"
             self.indent_level -= 1
         return code.strip()
+
 
     def _generate_op(self, node):
         _, op, left, right = node
